@@ -1,26 +1,29 @@
-import os
+# main.py
+
 import sys
-from dotenv import load_dotenv
-from google import genai
+from pkg.calculator import Calculator
+from pkg.render import format_json_output
+
 
 def main():
-    load_dotenv()
-    api_key = os.environ.get("GEMINI_API_KEY")
-
-    client = genai.Client(api_key=api_key)
-
-    if len(sys.argv)<2:
-        print("I need a prompt!")
+    calculator = Calculator()
+    if len(sys.argv) <= 1:
+        print("Calculator App")
+        print('Usage: python main.py "<expression>"')
+        print('Example: python main.py "3 + 5"')
         return
 
-    # response = client.models.generate_content(
-    #     model='gemini-2.0-flash-001', contents="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
-    # )
-    # print(response.text)
-    # if response is None or response.usage_metadata is None:
-    #     print('response is malformed')
-    #     return
-    # print(f'Prompt tokens: {response.usage_metadata.prompt_token_count}')
-    # print(f'Response tokens: {response.usage_metadata.candidates_token_count}')
+    expression = " ".join(sys.argv[1:])
+    try:
+        result = calculator.evaluate(expression)
+        if result is not None:
+            to_print = format_json_output(expression, result)
+            print(to_print)
+        else:
+            print("Error: Expression is empty or contains only whitespace.")
+    except Exception as e:
+        print(f"Error: {e}")
 
-main()
+
+if __name__ == "__main__":
+    main()
