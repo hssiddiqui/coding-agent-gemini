@@ -1,7 +1,26 @@
-Notes: Google AI Studio -> create api key
+# Coding Agent
+
+A Gemini-powered agent (CLI tool) that:
+
+1- Accepts a coding task (e.g., uv run main.py "fix my calculator app, it's not starting correctly")
+
+2- Chooses from a set of predefined functions to work on the task, for example:
+
+-Scan the files in a directory
+
+-Read a file's contents
+
+-Overwrite a file's contents
+
+-Execute the Python interpreter on a file
+
+3- Repeats step 2 until the task is complete (or it fails miserably, which is possible)
+
+## Create api key -> Google AI Studio 
 https://googleapis.github.io/python-genai/#generate-content
 
-messages = [
+## Functionality
+    messages = [
     types.Content(role="user", parts=[types.Part(text=prompt)]),
     ]
 
@@ -16,14 +35,14 @@ messages = [
     config=types.GenerateContentConfig(
         tools=[available_functions], system_instruction=system_prompt
     )
-response = client.models.generate_content(
+    response = client.models.generate_content(
             model='gemini-2.0-flash-001', 
             contents=messages,
             config=config,
         )
 Specify user prompts (--verbose optional to see prompt and response tokens), system prompts (define behaviour), tools (function declarations).
 
-system_prompt = """
+    system_prompt = """
     You are a helpful AI coding agent.
 
     When a user asks a question or makes a request, make a function call plan. You can perform the following operations:
@@ -40,29 +59,30 @@ system_prompt = """
     You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
     """
 
+## Notes
 
-uv : https://github.com/astral-sh/uv
+    uv : https://github.com/astral-sh/uv
 
+## WSL
 
-wsl
+    uv init your-project-name
 
-uv init your-project-name
+    cd your-project-name
 
-cd your-project-name
+    uv venv
 
-uv venv
+    source .venv/bin/activate
 
-source .venv/bin/activate
+    uv add google-genai==1.12.1
 
+    uv add python-dotenv==1.1.0
 
-uv add google-genai==1.12.1
-
-uv add python-dotenv==1.1.0
-
-uv run main.py
-create .env file
+    uv run main.py
+    
+    create .env file
 echo GEMINI_API_KEY="your_api_key_here" > .env
 
 Add the .env file to your .gitignore (We never want to commit API keys, passwords, or other sensitive information to git.)
+
 
 
